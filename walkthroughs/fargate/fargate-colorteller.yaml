@@ -50,7 +50,7 @@ Resources:
           AssignPublicIp: DISABLED
           SecurityGroups:
             - 'Fn::ImportValue': !Sub "${EnvironmentName}:ECSServiceSecurityGroup"
-          Subnets: 
-            - 'Fn::ImportValue': !Sub "${EnvironmentName}:PrivateSubnet1"
-            - 'Fn::ImportValue': !Sub "${EnvironmentName}:PrivateSubnet2"
+          Subnets:
+            - 'dev-private.eu-west-1a.0'
+            - 'dev-private.eu-west-1a.0'
       TaskDefinition: { Ref: ColorTellerGreenTaskDefinition }

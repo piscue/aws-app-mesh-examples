@@ -4,19 +4,9 @@ set -ex
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-stack_output=$(aws --profile "${AWS_PROFILE}" --region "${AWS_DEFAULT_REGION}" \
-    cloudformation describe-stacks --stack-name "${ENVIRONMENT_NAME}-ecs-cluster" \
-    | jq '.Stacks[].Outputs[]')
-
-task_role_arn=($(echo $stack_output \
-    | jq -r 'select(.OutputKey == "TaskIamRoleArn") | .OutputValue'))
-
-execution_role_arn=($(echo $stack_output \
-    | jq -r 'select(.OutputKey == "TaskExecutionIamRoleArn") | .OutputValue'))
-
-ecs_service_log_group=($(echo $stack_output \
-    | jq -r 'select(.OutputKey == "ECSServiceLogGroup") | .OutputValue'))
-
+task_role_arn=${TASK_ROLE_ARN}
+execution_role_arn=${TASK_EXECUTION_ROLE_ARN}
+ecs_service_log_group=${ECS_SERVICE_LOG_GROUP}
 envoy_log_level="debug"
 
 # Color Teller Green Task Definition
@@ -48,7 +38,7 @@ task_def_json=$(jq -n \
     --argjson ENVOY_CONTAINER_JSON "${envoy_container_json}" \
     --argjson XRAY_CONTAINER_JSON "${xray_container_json}" \
     -f "${DIR}/fargate-colorteller-task-def.json")
-task_def=$(aws --profile "${AWS_PROFILE}" --region "${AWS_DEFAULT_REGION}" \
+task_def=$(aws --region "${AWS_DEFAULT_REGION}" \
     ecs register-task-definition \
     --cli-input-json "$task_def_json")
 colorteller_green_task_def_arn=($(echo $task_def \

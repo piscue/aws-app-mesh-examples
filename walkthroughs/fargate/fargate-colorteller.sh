@@ -5,9 +5,9 @@ set -ex
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 # Create colorteller task definition
-source ${DIR}/fargate-colorteller-task-def.sh
+# source ${DIR}/fargate-colorteller-task-def.sh
 
-aws --profile "${AWS_PROFILE}" --region "${AWS_DEFAULT_REGION}" \
+aws --region "${AWS_DEFAULT_REGION}" \
     cloudformation deploy \
     --stack-name "${ENVIRONMENT_NAME}-fargate-colorteller" \
     --capabilities CAPABILITY_IAM \
